@@ -1,0 +1,9 @@
+%%% Transmission Line Data
+5.+veR = 0.099000e-002 -> 3.FromBus=2 -> 4.ToBus=3
+
+%%% Transmission Line Data
+1.Status = 1 -> 3.FromBus=2
+
+%%% Generator Data
+2.Status = 1 -> 1.BusNo=2
+
