@@ -1,9 +1,23 @@
-%%% Transmission Line Data
-5.+veR = 0.099000e-002 -> 3.FromBus=2 -> 4.ToBus=3
+%16.No of Islands
+2
 
-%%% Transmission Line Data
-1.Status = 1 -> 3.FromBus=2
+%%Common System Specifications
+1.MaxBusID = 6
+2.TotalBuses = 6
 
-%%% Generator Data
-2.Status = 1 -> 1.BusNo=2
+%%%Transmission Line Data
+1.Status = 0 -> 3.FromBus=1
 
+%%%Generator Data
+2.Status = 0 -> 1.BusNo=1
+
+%%%%Bus Datas
+VMag = 1.054175065824e+000 -> 1.BusId=2 -> row=1
+
+%%%%Bus Datas
+PLoad(mw) = 50.00 -> 1.BusId=3 -> row=2
+
+%%%%Bus Datas
+QComp(mvar) = 5.0 -> 1.BusId=4
+
+&compare&

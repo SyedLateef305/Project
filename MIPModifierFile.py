@@ -333,6 +333,41 @@ def _apply_subsection_mod(lines, modified_lines, search_start, section, subsecti
             value_count += len(line_values)
 
 
+def _numeric_word_position_map(line):
+    """
+    Map each whitespace-delimited token's word position in `line` to its
+    position among only the numeric tokens in that line. Non-numeric tokens
+    (e.g. a text field like BusName embedded between numeric columns) are
+    skipped, so this lets a header word position be translated into the
+    correct index for extract_numeric_values()/replace_value_in_line(),
+    which only ever see the numeric tokens.
+    """
+    tokens = line.split()
+    mapping = {}
+    numeric_idx = 0
+    for i, tok in enumerate(tokens):
+        try:
+            float(tok)
+            mapping[i] = numeric_idx
+            numeric_idx += 1
+        except ValueError:
+            pass
+    return mapping
+
+
+def _find_first_data_line(lines, start_idx):
+    """Return the first non-blank, non-header line at/after start_idx, or None if a new section starts first."""
+    for i in range(start_idx, len(lines)):
+        line = lines[i].strip()
+        if not line:
+            continue
+        if line.startswith('%'):
+            return None
+        if extract_numeric_values(line):
+            return line
+    return None
+
+
 def _apply_tabular_mod(lines, modified_lines, search_start, section, column_name, new_value, conditions):
     """
     Applies tabular modification.
@@ -361,6 +396,11 @@ def _apply_tabular_mod(lines, modified_lines, search_start, section, column_name
         print(f"Warning: Column '{column_name}' not found in section '{section}'")
         return
 
+    # Sample data row used to translate header word positions into numeric
+    # column positions (handles headers with embedded text fields like BusName)
+    sample_line = _find_first_data_line(lines, column_line + 1)
+    numeric_map = _numeric_word_position_map(sample_line) if sample_line else {}
+
     # Determine column index
     column_idx = -1
     match = re.match(r'^(\d+)', column_name)
@@ -368,7 +408,7 @@ def _apply_tabular_mod(lines, modified_lines, search_start, section, column_name
         column_idx = int(match.group(1)) - 1
     else:
         # Try to find by name in header line
-        header_parts = lines[column_line].split()
+        header_parts = lines[column_line].lstrip('%').split()
         field_name = column_name.split('.')[-1].lower()
 
         for idx, part in enumerate(header_parts):
@@ -376,12 +416,12 @@ def _apply_tabular_mod(lines, modified_lines, search_start, section, column_name
             header_name = part.split('.')[-1].lower()
 
             if header_name == field_name:
-                column_idx = idx
+                column_idx = numeric_map.get(idx, -1)
                 break
     
     # Parse conditions
     parsed_conditions = {}
-    header_parts = lines[column_line].split()
+    header_parts = lines[column_line].lstrip('%').split()
     
     for condition in conditions:
         if '=' in condition:
@@ -399,7 +439,7 @@ def _apply_tabular_mod(lines, modified_lines, search_start, section, column_name
                     header_name = part.split('.')[-1].lower()
 
                     if header_name == field_name:
-                        cond_idx = idx
+                        cond_idx = numeric_map.get(idx, -1)
                         break
             
             if cond_idx >= 0:
@@ -420,27 +460,26 @@ def _apply_tabular_mod(lines, modified_lines, search_start, section, column_name
 
             for cond_idx, cond_value in parsed_conditions.items():
 
-            if cond_idx < 0 or cond_idx >= len(line_values):
-                all_conditions_met = False
-                break
-
-            try:
-                if abs(float(line_values[cond_idx]) - float(cond_value)) > 1e-6:
+                if cond_idx < 0 or cond_idx >= len(line_values):
                     all_conditions_met = False
                     break
 
-            except ValueError:
-                if str(line_values[cond_idx]) != cond_value:
-                    all_conditions_met = False
-                    break
+                try:
+                    if abs(float(line_values[cond_idx]) - float(cond_value)) > 1e-6:
+                        all_conditions_met = False
+                        break
 
+                except ValueError:
+                    if str(line_values[cond_idx]) != cond_value:
+                        all_conditions_met = False
+                        break
 
-        if all_conditions_met:
-            modified_lines[i] = replace_value_in_line(
-                modified_lines[i],
-                column_idx,
-                new_value
-            )
+            if all_conditions_met:
+                modified_lines[i] = replace_value_in_line(
+                    modified_lines[i],
+                    column_idx,
+                    new_value
+                )
 
 
 def _apply_two_row_table_mod(lines, modified_lines, search_start, section, column_name, new_value, conditions, target_row):
@@ -464,6 +503,27 @@ def _apply_two_row_table_mod(lines, modified_lines, search_start, section, colum
         print(f"Warning: No data headers found in section '{section}'")
         return
 
+    # Build a numeric-position map per header row, from that row's own
+    # sample data (row 1 or row 2 of the first pair), so name-based lookups
+    # land on the correct numeric column even when a header row has an
+    # embedded text field (e.g. BusName among numeric columns).
+    first_data_line = header_lines[-1] + 1
+    sample_lines = []
+    scan_idx = first_data_line
+    for _ in range(len(header_lines)):
+        s = _find_first_data_line(lines, scan_idx)
+        sample_lines.append(s)
+        if s is None:
+            break
+        # advance scan_idx past this sample line
+        for j in range(scan_idx, len(lines)):
+            if lines[j].strip() == s:
+                scan_idx = j + 1
+                break
+    numeric_maps = [_numeric_word_position_map(s) if s else {} for s in sample_lines]
+    while len(numeric_maps) < len(header_lines):
+        numeric_maps.append({})
+
     # Determine column index and auto-detect target row if needed
     column_idx = -1
     auto_target_row = 1
@@ -473,11 +533,11 @@ def _apply_two_row_table_mod(lines, modified_lines, search_start, section, colum
     else:
         field_name = column_name.split('.')[-1] if '.' in column_name else column_name
         for header_idx, header_line_num in enumerate(header_lines):
-            header_parts = lines[header_line_num].split()
+            header_parts = lines[header_line_num].lstrip('%').split()
             for idx, part in enumerate(header_parts):
                 header_name = part.split('.')[-1].lower()
                 if header_name == field_name.lower():
-                    column_idx = idx
+                    column_idx = numeric_maps[header_idx].get(idx, -1)
                     auto_target_row = header_idx + 1
                     break
             if column_idx >= 0:
@@ -506,17 +566,18 @@ def _apply_two_row_table_mod(lines, modified_lines, search_start, section, colum
         else:
             field_name = cond_field.split('.')[-1] if '.' in cond_field else cond_field
 
-            # Search ALL header lines
+            # Search ALL header lines (conditions are always checked
+            # against row 1's data, so translate using row 1's numeric map)
             for header_line_num in header_lines:
 
-                header_parts = lines[header_line_num].split()
+                header_parts = lines[header_line_num].lstrip('%').split()
 
                 for idx, part in enumerate(header_parts):
 
                     header_name = part.split('.')[-1].lower()
                     if header_name == field_name.lower():
 
-                        cond_idx = idx
+                        cond_idx = numeric_maps[0].get(idx, -1)
                         break
 
                 if cond_idx >= 0:
