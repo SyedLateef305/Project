@@ -1,6 +1,7 @@
 """
-MIPModifier.py
-A module for parsing and applying modifications to MIP (Model Input Parameters) data files.
+VIA_main.py
+A module for parsing and applying modifications to MIP (Model Input Parameters) data files
+used in Voltage Instability Analysis (VIA) case files.
 This module provides functionality to:
 - Parse modification specifications from a modify.txt file supporting four format types
 - Apply modifications to corresponding data files based on parsed specifications
