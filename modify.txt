@@ -1,9 +1,3 @@
-%16.No of Islands
-2
-
-%%Common System Specifications
-1.MaxBusID = 6
-2.TotalBuses = 6
 
 %%%Transmission Line Data
 1.Status = 0 -> 3.FromBus=1
@@ -19,5 +13,11 @@ PLoad(mw) = 50.00 -> 1.BusId=3 -> row=2
 
 %%%%Bus Datas
 QComp(mvar) = 5.0 -> 1.BusId=4
+
+%%%%Bus Datas
+PGen(mw) = 0.00 -> 1.BusId=1 -> row=2
+
+%%%%Bus Datas
+QGen(mvar) = 0.00 -> 1.BusId=1 -> row=2
 
 &compare&

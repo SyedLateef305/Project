@@ -8,11 +8,11 @@ VERSION  10.2
 % 1.MaxBusID		2.TotalBuses    3.Total2Wdg			4.Total3Wdg		 5.TotalLines
 % 6.TotalSeReac	7.TotalSeCap    8.TotalBusCoupler	9.TotalShRea	10.TotalShCap	11.TotalMotor
 %12.Total Gen	13.Total load	14.Total filter	15.Total HVDC
-   6     6     0     0     7     0     0     0     0     0	   0
+   5     5     0     0     7     0     0     0     0     0	   0
     2     4     0     0
 
 %16.No of Islands
-2
+1
 %1.Zones	2.PrintOpt	3.PlotOpt	4.BaseMVA	5.Frequency
    1     3  1     100.000000   60.0000
 
@@ -23,7 +23,7 @@ VERSION  10.2
 % BusId  DummyNo  ZoneNo    BaseVolt   BusName   VMag        VAng    
 %        PGen(mw)  QGen(mvar) PLoad(mw) QLoad(mvar) QComp(mvar)  Island_No
    1 1  1 132.000    North  1.060000000000e+000 0.000000000000e+000 
-        129.59    -7.42     0.00     0.00   0.00 	1
+        0.00    0.00     0.00     0.00   0.00 	1
    2 1  1 132.000    South  1.054175065824e+000 -2.806462522206e+000 
          40.00    30.00    20.00    10.00   0.00 	1
    3 1  1 132.000     Lake  1.024175065824e+000 -4.996992740951e+000 

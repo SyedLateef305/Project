@@ -23,7 +23,47 @@ Dependencies:
 import sys
 import os
 import re
+import subprocess
+from pathlib import Path
 # import MIPComp
+
+
+def Run_new_Input_Files(generated_file, mipower_exe=r"C:\MiPower10_1\powervia.exe"):
+    """
+    Runs the PowerVIA solver on the newly generated .dat0 case file.
+
+    Args:
+        generated_file (str): Path to the .dat0 file produced by main() -
+            this is the case file that gets solved.
+        mipower_exe (str): Path to powervia.exe.
+
+    Confirmed from PRDC's own source (sprintf call building the command):
+        "%s\\powervia.exe  +++PowerVIA-R-Dec-1998+++ %s   %s   %s   %s%d%s%dV.bin +b"
+    The 4 data files (.dat0 input, .out0 output, .etc0, .bin) all share the
+    same base filename - PowerVIA derives them from CaseNo/filename/
+    ContingencyNo internally, but since that reconstruction always lands on
+    the same base name as the input file, we can just swap extensions.
+    "+b" is a trailing flag (likely batch/silent mode).
+    """
+    base, _ext = os.path.splitext(str(generated_file))
+    outfile = base + ".out0"
+    etcfile = base + ".etc0"
+    binfile = base + ".bin"
+
+    subprocess.run(
+        [
+            mipower_exe,
+            "+++PowerVIA-R-Dec-1998+++",
+            str(generated_file),
+            outfile,
+            etcfile,
+            binfile,
+            "+b",
+        ],
+        check=True,
+        cwd=str(Path(generated_file).resolve().parent),
+    )
+
 
 def findFileCount(input_file):
     """
@@ -709,10 +749,14 @@ def modifyInput(data, modifications):
 def main(input_file, output_file, mod_file):
 
     try:
-        with open(input_file, 'r') as infile:
+        # newline='' preserves the file's original line endings exactly
+        # (input.dat0/output.dat0 are CRLF). Without this, Python's default
+        # universal-newline handling silently converts CRLF -> LF on read
+        # and writes plain LF back out, corrupting the format MiPower expects.
+        with open(input_file, 'r', newline='') as infile:
             data = infile.read()
 
-        with open(mod_file, 'r') as modfile:
+        with open(mod_file, 'r', newline='') as modfile:
             mod_data = modfile.read()
 
         modifications = parse_modifications(mod_data)
@@ -721,7 +765,7 @@ def main(input_file, output_file, mod_file):
         if output_file == None or output_file.strip() == "":
             output_file = findFileCount(input_file)
 
-        with open(output_file, 'w') as outfile:
+        with open(output_file, 'w', newline='') as outfile:
             outfile.write(processed_data)
         print(f"Processed data written to {output_file}")
         print(f"Applied {len(modifications)} modification(s)")
@@ -748,3 +792,10 @@ if __name__ == "__main__":
         output_file = input("enter output file names :").strip()
 
     main(input_file, output_file, mod_file)
+
+    # main() resolves output_file if it was left blank (findFileCount), so
+    # re-derive the real generated filename here rather than assuming.
+    if output_file is None or output_file.strip() == "":
+        output_file = findFileCount(input_file)
+
+    Run_new_Input_Files(output_file)
