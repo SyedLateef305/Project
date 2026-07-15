@@ -1,23 +1,13 @@
+%Slack Bus Angle
+0.50
 
-%%%Transmission Line Data
-1.Status = 0 -> 3.FromBus=1
+%%Common Control Options
+10.Slack Bus ID = 1
 
-%%%Generator Data
-2.Status = 0 -> 1.BusNo=1
+%%%Transmission Line
+Status = 0 -> FromBus=1
 
-%%%%Bus Datas
-VMag = 1.054175065824e+000 -> 1.BusId=2 -> row=1
-
-%%%%Bus Datas
-PLoad(mw) = 50.00 -> 1.BusId=3 -> row=2
-
-%%%%Bus Datas
-QComp(mvar) = 5.0 -> 1.BusId=4
-
-%%%%Bus Datas
-PGen(mw) = 0.00 -> 1.BusId=1 -> row=2
-
-%%%%Bus Datas
-QGen(mvar) = 0.00 -> 1.BusId=1 -> row=2
+%%%%Two Winding Transformers
+MaxTap = 1.10000 -> FromBus=2 -> row=2
 
 &compare&

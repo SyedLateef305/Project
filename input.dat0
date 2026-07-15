@@ -1,59 +1,106 @@
-       VOLTAGE INSTABILITY ANALYSIS
-CASE NO :  1     CONTINGENCY  : 0   SCHEDULE NO : 0
-CONTINGENCY NAME : Base Case
-VERSION  10.2
+        LOAD FLOW ANALYSIS
+CASE NO :  1     CONTINGENCY  : 0  SCHEDULE NO : 0
+CONTINGENCY NAME : Base Case 	 RATING CONSIDERED : NOMINAL 
+VERSION 10.3
+%% First Power System Network 
+% System Specifications
 
-%% 
-% Common System Specifications
 % 1.MaxBusID		2.TotalBuses    3.Total2Wdg			4.Total3Wdg		 5.TotalLines
-% 6.TotalSeReac	7.TotalSeCap    8.TotalBusCoupler	9.TotalShRea	10.TotalShCap	11.TotalMotor
-%12.Total Gen	13.Total load	14.Total filter	15.Total HVDC
-   5     5     0     0     7     0     0     0     0     0	   0
-    2     4     0     0
+% 6.TotalSeReac	7.TotalSeCap    8.TotalBusCoupler	9.TotalShRea	10.TotalShCap
+%11.TotalMotor	   12.TotalGen+WindGen   13.TotalLoad		   14.TotalLdChar	15.TotalFreqRelay
+%16.TotalGenCap   17.TotalFilter  18.TotalTieLines	   19.TotalHVDC		20.TotalDCLinks
+%21 TotalSFD 22: FeedCurrent 23. Total TCSC 24. Total SPS 25. Total UPFC
+%26.TotalDetailedWndGen  27.No.ofWTCurves  28.No.ofDetailedCurves  29.No.ofSolarPVPlants 30.Total SynchronousMotor
 
-%16.No of Islands
-1
-%1.Zones	2.PrintOpt	3.PlotOpt	4.BaseMVA	5.Frequency
-   1     3  1     100.000000   60.0000
+   4     4     1     0     2     0     0     0     0     0     0
+   1     0     0     0     0     0     0     0     0    0  0
 
-% CBResistance CBReactance  Trans R/X
-0.000000e+000  1.000000e-004   0.050000
+   0     0     0     0     0     0     0     0
+%Common Control Options
 
-% Bus Datas
-% BusId  DummyNo  ZoneNo    BaseVolt   BusName   VMag        VAng    
-%        PGen(mw)  QGen(mvar) PLoad(mw) QLoad(mvar) QComp(mvar)  Island_No
-   1 1  1 132.000    North  1.060000000000e+000 0.000000000000e+000 
-        129.59    -7.42     0.00     0.00   0.00 	1
-   2 1  1 132.000    South  1.047436842759e+000 -2.806462522206e+000 
-         40.00    30.00    20.00    10.00   0.00 	1
-   3 1  1 132.000     Lake  1.024175065824e+000 -4.996992740951e+000 
-          0.00     0.00    45.00    15.00   0.00 	1
-   4 1  1 132.000     Main  1.023565909244e+000 -5.329171106556e+000 
-          0.00     0.00    40.00     5.00   0.00 	1
-   5 1  1 132.000      Elm  1.017936305597e+000 -6.150319643776e+000 
-          0.00     0.00    60.00    10.00   0.00 	1
+% 1.LFAOption	(0-Only Slack Bus Concept		<FDLF>)
+%				(2-Real Power Optimization		<FDLF>)
+%				(3-Reactive Power Optimization	<FDLF>)
+%				(4-Contingency Analysis			<FDLF>)
+%				(5-Only Slack Bus Concept		<Gauss-Siedel Method>)
+%				(666-Voltage instability analysis		<FDLF>)
+%				(6-Only Slack Bus Concept		<NR Method>)
+%    			(66-DC Power Flow)
+%    			(700-Substation wise Load Flow  <FDLF>
+%    			(705-Substation wise Load Flow    <Gauss-Siedel Method>
+%    			(706-Substation wise Load Flow    <NR Method>
+% 2.Number Of Zones	3.Print Option (0/1-Only Data/2-Only Output/3-Detailed/4-Impedance/5-BusWise Flow) 
+% 4.Plot Option (0/1)	5.Frequency Dependent LFA (0/1-FTC/2-FFC/3-Bias)
+% 6.Base MVA			7.Nominal Frequency	  8.Frequency Deviation 
+%9.Flow Type Option (0/1/2/3/4)   10.Slack Bus ID (0-Program search/Specific)
+%11.Tap Change Option (0/1) 12.ATC(0/1) 13.No of Areas 14.No of Subsystems 15.Scaling factor type(1-Zone wise,2-Area wise)
 
-% Transmission Line Data
-% 1.Status  2.NoOfCkts  3.FromBus  4.ToBus  5.+veR  6.+veX  7.+veB/2
-3  1     1    2 2.000000e-002 6.000000e-002 3.000000e-002
-3  1     1    3 8.000000e-002 2.400000e-001 2.500000e-002
-3  1     2    3 6.000000e-002 1.800000e-001 2.000000e-002
-3  1     2    4 6.000000e-002 1.800000e-001 2.000000e-002
-3  1     2    5 4.000000e-002 1.200000e-001 1.500000e-002
-3  1     3    4 1.000000e-002 3.000000e-002 1.000000e-002
-3  1     4    5 8.000000e-002 2.400000e-001 2.500000e-002
+ 666    1  3  1  0     100.000000  60.00  0.00  0     0    0     0    1    0    1
+% 1.Q-Checking Limit (iteration no)	2.P-Tolerance	3.Q-Tolerance
+% 4.Maximum Iterations	5.Load Model Voltage (pu)	6.CB Resistance  7.CB Reactance
+% 8.Transformer R/X ratio
+   4  1.00000e-003  1.00000e-003   15  0.750  0.00000e+000 1.00000e-004  0.050
 
 
-% Generator Data
-% 1.BusNo	2.Status 
-      1 		    3 
-      2 		    3 
+%Cost Factors
+% 1. Interest Charges  2. Operational Charges   3. Life of Equipment (yrs)
+% 4. Energy Charges	5. Loss Load Factor		 6. Cost per Mvar(in Lakhs) 7. Currency
+15.00000   4.00000  20.00000   2.50000   0.30000   5.00000 Rs
 
-%Valid_Island_No  Convergence
-1		1
+
+%Zone wise Multiplication Factors
+% 1.Zone Number  2.PLoad   3.QLoad    4.PGen	5.QGen   6.ShRea  7.ShCap 8 Compensation
+   0   1.0000   1.0000   1.0000   1.0000   1.0000   1.0000  1.0000
+   1   1.0000   1.0000   1.0000   1.0000   1.0000   1.0000  1.0000
+
+%Area Numbers
+   1	
+
+
+%Bus Data
+%Bus_ID	AreaNo ZoneNo SubsystemNo	BasekV	MinVolt(pu)	MaxVolt(pu)	BusName
+1     1     1    0	 13.800  0.950  1.050      Bus1
+2     1     1    0	 13.800  0.950  1.050      Bus2
+3     1     1    0	  0.480  0.950  1.050      Bus3
+4     1     1    0	  0.480  0.950  1.050      Bus4
+
+
+
+%Two Winding Transformers
+%Status	NoOfUnits	FromBus	 ToBus		R    X    NominalTap	MVA
+%Control	MinTap		MaxTap	 TapStep	PhaseShift 
+3   1     2     3  5.00032e-001  2.83118e+000   1.00000  2.000000
+                2   0.95000   1.05000   0.01250      0.00 
+
+
+
+%Transmission Line
+%Status	NoOfCkts	FromBus	 ToBus		R    X    B/2	MVA  kMs  
+3   1      1     2  2.47032e-002  2.47032e-003  0.000000e+000   2.0000  3.960000e-001  
+3   2      3     4  4.82865e-001  2.92034e-001  0.000000e+000   4.0000  1.524000e-001  
+
+
+
+%Generator Data
+%Bus	SchMW	MinMvar	MaxMvar		SpecVoltage(pu)	CapCurveNo	MVA Status Type
+   1     6.000     0.000     4.500   1.00000  0     7.500 3  1
+
+
+%GENERATOR FREQUENCY CHARACTERISTICS
+%FromBus Rating MinRat  MaxRat  %Droop  PartFactor  BiasSet
+%				 C0      C1      C2
+   1      6.000      0.000      6.000    4.00  0.0000     0.000
+                           0.0000e+000   0.0000e+000   0.0000e+000
+
+
+%Slack Bus Angle
+ 0.00
+
+%1.Total load buses of interest 	 2.Total series elements	 3.Plot option
+0		0		1
 
 %1 0-Area Wise/1-Bus Wise/2-Zone Wise 2.Source Count   3.Sink Count
-1 0 1 0 0 0 0
+1 0 1 
 
 %Source Details
 %1.Area/Bus Number/Zone 2.Option(1-Generation Increment) 3.Incdec Loc(1-All Buses,2-selected Buses) 4.Load Increment percent(1-equal/2-Unequal) 5.%Contribution total change 
@@ -61,10 +108,15 @@ VERSION  10.2
 %1.BusNumber 2.Increment
 
 %Sink Details
-%1.Area/Bus Number/Zone 2.Option(2-Load Increment) 3.Load Increment percent(1-equal/2-Unequal) 4.Incdec Loc(1-All Buses,2-selected Buses) 5.LoadType (0 constant q,1 constant pf)
+%1.Area/Bus Number/Zone 2.Option(2-Load Increment) 3.Load Increment percent(1-equal/2-Unequal) 4.Incdec Loc(1-All Buses,2-selected Buses) 5.Type (0 Collapse point,1 User specified) 6.LoadType(0 ConstP, 1 ConstQ, 2 UserDefPQ, 3 UserDefPF, 4 Const PF)
 %LoadBus/GenBusCount
 %1.BusNumber	 2.Increment
-3 2 1 2 0
+%1.Min Real Power in MW	 2.Max Real Power in MW	 3.Real Power Step in MW	 4.Min Reactive power in MVAR	 5.Max Reactive Power in MVAR	  6.Reactive Power Step in MVAR
+0 2 1 2 0 2
 1
-3 0.000000		
+0 0.000000		
+0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 
 
+%Buses of interest
+
+%Series elements of interest
