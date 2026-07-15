@@ -7,7 +7,4 @@
 %%%Transmission Line
 Status = 0 -> FromBus=1
 
-%%%%Two Winding Transformers
-MaxTap = 1.10000 -> FromBus=2 -> row=2
-
 &compare&

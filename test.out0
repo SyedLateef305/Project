@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Date and Time : Wed Jul 15 16:25:19 2026
+Date and Time : Wed Jul 15 15:33:40 2026
 -------------------------------------------------------------------------------
         LOAD FLOW ANALYSIS
 CASE NO :  1     CONTINGENCY  : 0  SCHEDULE NO : 0
@@ -7,15 +7,15 @@ CONTINGENCY NAME : Base Case 	 RATING CONSIDERED : NOMINAL
 VERSION NUMBER : 10.3
 
 -------------------------------------------------------------------------------
-%% First Power System Network 
+%% 
 LARGEST BUS NUMBER USED        :    5    ACTUAL NUMBER OF BUSES         :    5
 NUMBER OF 2 WIND. TRANSFORMERS :    0    NUMBER OF 3 WIND. TRANSFORMERS :    0
-NUMBER OF TRANSMISSION LINES   :    6
+NUMBER OF TRANSMISSION LINES   :    7
 NUMBER OF SERIES REACTORS      :    0    NUMBER OF SERIES CAPACITORS    :    0
 NUMBER OF BUS COUPLERS         :    0
 NUMBER OF SHUNT REACTORS       :    0    NUMBER OF SHUNT CAPACITORS     :    0
 NUMBER OF SHUNT IMPEDANCES     :    0    NUMBER OF GENERATORS           :    2
-NUMBER OF LOADS                :    5
+NUMBER OF LOADS                :    4
 NUMBER OF FILTERS              :    0
 NUMBER OF HVDC CONVERTORS      :    0
 
