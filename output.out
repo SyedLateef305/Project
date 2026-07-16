@@ -1,0 +1,12 @@
+
+|***** BUSES FALLING UNDER ISLAND 1 *****|
+   1           Birch 
+Real Power :     65.000 MW; Reactive Power :     30.000 MVAr
+Scheduled Generation:    400.000 MW
+-------------------------------------------------------------------------------
+
+|***** BUSES FALLING UNDER ISLAND 2 *****|
+   2             Elm    3           Maple    4             Oak    5            Pine 
+Real Power :    340.000 MW; Reactive Power :    170.000 MVAr
+Scheduled Generation:    180.000 MW
+-------------------------------------------------------------------------------

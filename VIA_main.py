@@ -28,71 +28,48 @@ from pathlib import Path
 # import MIPComp
 
 
-def Run_new_Input_Files(generated_file, mipower_exe=r"C:\MiPower10_1\powervia.exe"):
-    """
-    Runs the PowerVIA solver on the newly generated .dat0 case file.
+import os
+import subprocess
+from pathlib import Path
 
-    Args:
-        generated_file (str): Path to the .dat0 file produced by main() -
-            this is the case file that gets solved.
-        mipower_exe (str): Path to powervia.exe.
 
-    Confirmed from PRDC's own source (sprintf call building the command):
-        "%s\\powervia.exe  +++PowerVIA-R-Dec-1998+++ %s   %s   %s   %s%d%s%dV.bin +b"
-    The 4 data files (.dat0 input, .out0 output, .etc0, .bin) all share the
-    same base filename - PowerVIA derives them from CaseNo/filename/
-    ContingencyNo internally, but since that reconstruction always lands on
-    the same base name as the input file, we can just swap extensions.
-    "+b" is a trailing flag (likely batch/silent mode).
+def Run_new_Input_Files(
+    generated_file,
+    powerlfa_exe=r"C:\MiPower10_1\powerlfa.exe",
+    via_folder=r"C:\Users\internstudent2\Desktop\Project\VIA",
+):
     """
-    base, _ext = os.path.splitext(str(generated_file))
+    Runs VIA using the integrated PowerLFA executable.
+    """
+
+    base, _ = os.path.splitext(str(generated_file))
+
+    datfile = str(generated_file)
     outfile = base + ".out0"
+    pltfile = base + ".plt0"
     etcfile = base + ".etc0"
-    binfile = base + ".bin"
+    barfile = base + ".bar"
+    ntfile = base + ".nt0"
+    acdfile = os.path.join(via_folder, "lfa.acd")
+
+    cmd = [
+        powerlfa_exe,
+        "+++PowerLFA-R-Dec-1998+++",
+        datfile,
+        outfile,
+        pltfile,
+        etcfile,
+        barfile,
+        acdfile,
+        ntfile,
+    ]
 
     result = subprocess.run(
-        [
-            mipower_exe,
-            "+++PowerVIA-R-Dec-1998+++",
-            str(generated_file),
-            outfile,
-            etcfile,
-            binfile,
-            "+b",
-        ],
+        cmd,
         cwd=str(Path(generated_file).resolve().parent),
         capture_output=True,
         text=True,
     )
-
-    # Surface anything powervia.exe printed - license, DB/ODBC, or solver
-    # errors normally show up here even in "+b" (batch/silent) mode, and
-    # get lost if you only check the return code.
-    if result.stdout.strip():
-        print("---- powervia.exe stdout ----")
-        print(result.stdout)
-    if result.stderr.strip():
-        print("---- powervia.exe stderr ----")
-        print(result.stderr)
-
-    if result.returncode != 0:
-        print(f"WARNING: powervia.exe exited with code {result.returncode}")
-
-    # Sanity-check the report it actually wrote, since powervia can exit 0
-    # while still having written a truncated/stub report (e.g. it printed
-    # the generic system-spec header, then failed before the VIA-specific
-    # section - a common symptom of a broken case database connection).
-    if os.path.exists(outfile):
-        with open(outfile, 'r', errors='ignore') as f:
-            out_text = f.read()
-        if "NO REPORT GENERATION" in out_text or len(out_text.splitlines()) < 50:
-            print(
-                f"WARNING: {outfile} looks truncated ({len(out_text.splitlines())} lines). "
-                "This usually means powervia.exe aborted mid-run rather than a script bug - "
-                "check for a case-database/ODBC error on this machine."
-            )
-    else:
-        print(f"WARNING: expected output file {outfile} was not created.")
 
 
 def findFileCount(input_file):
