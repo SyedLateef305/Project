@@ -1,10 +1,10 @@
-%Slack Bus Angle
-0.50
+%%Common Control Options
+3.PrintOption = 4
 
 %%Common Control Options
-10.Slack Bus ID = 1
+6.BaseMVA = 200.000000
 
-%%%Transmission Line
-Status = 0 -> FromBus=1
+%%Cost Factors
+1.InterestCharges = 20.00000
 
 &compare&

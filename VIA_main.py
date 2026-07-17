@@ -72,6 +72,7 @@ def Run_new_Input_Files(
     )
 
 
+
 def findFileCount(input_file):
     """
     Generates a unique output filename by appending a counter to the base name.
@@ -444,9 +445,21 @@ def _apply_tabular_mod(lines, modified_lines, search_start, section, column_name
         print(f"Warning: Column '{column_name}' not found in section '{section}'")
         return
 
+    # Find the first genuine data line, skipping past ANY further blank or
+    # '%' comment lines - some sections split their column names across
+    # multiple header lines (e.g. LOAD DATA has a 2-line header), so the
+    # line immediately after column_line isn't always real data.
+    data_start = column_line + 1
+    while data_start < len(lines):
+        s = lines[data_start].strip()
+        if not s or s.startswith('%'):
+            data_start += 1
+            continue
+        break
+
     # Sample data row used to translate header word positions into numeric
     # column positions (handles headers with embedded text fields like BusName)
-    sample_line = _find_first_data_line(lines, column_line + 1)
+    sample_line = _find_first_data_line(lines, data_start)
     numeric_map = _numeric_word_position_map(sample_line) if sample_line else {}
 
     # Determine column index
@@ -493,41 +506,44 @@ def _apply_tabular_mod(lines, modified_lines, search_start, section, column_name
             if cond_idx >= 0:
                 parsed_conditions[cond_idx] = cond_value
     
+    if column_idx < 0:
+        print(f"Warning: Could not resolve column position for '{column_name}' in section '{section}'")
+        return
+
     # Apply modifications to matching rows
-    if column_idx >= 0:
-        for i in range(column_line + 1, len(lines)):
-            line = lines[i].strip()
-            if not line:
-                continue
-            if line.startswith('%'):
+    for i in range(data_start, len(lines)):
+        line = lines[i].strip()
+        if not line:
+            continue
+        if line.startswith('%'):
+            break
+
+        line_values = extract_numeric_values(line)
+
+        all_conditions_met = True
+
+        for cond_idx, cond_value in parsed_conditions.items():
+
+            if cond_idx < 0 or cond_idx >= len(line_values):
+                all_conditions_met = False
                 break
-            
-            line_values = extract_numeric_values(line)
-            
-            all_conditions_met = True
 
-            for cond_idx, cond_value in parsed_conditions.items():
-
-                if cond_idx < 0 or cond_idx >= len(line_values):
+            try:
+                if abs(float(line_values[cond_idx]) - float(cond_value)) > 1e-6:
                     all_conditions_met = False
                     break
 
-                try:
-                    if abs(float(line_values[cond_idx]) - float(cond_value)) > 1e-6:
-                        all_conditions_met = False
-                        break
+            except ValueError:
+                if str(line_values[cond_idx]) != cond_value:
+                    all_conditions_met = False
+                    break
 
-                except ValueError:
-                    if str(line_values[cond_idx]) != cond_value:
-                        all_conditions_met = False
-                        break
-
-            if all_conditions_met:
-                modified_lines[i] = replace_value_in_line(
-                    modified_lines[i],
-                    column_idx,
-                    new_value
-                )
+        if all_conditions_met:
+            modified_lines[i] = replace_value_in_line(
+                modified_lines[i],
+                column_idx,
+                new_value
+            )
 
 
 def _apply_two_row_table_mod(lines, modified_lines, search_start, section, column_name, new_value, conditions, target_row):
