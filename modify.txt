@@ -1,10 +1,6 @@
-%%Common Control Options
-3.PrintOption = 4
-
-%%Common Control Options
-6.BaseMVA = 200.000000
+%===== Case Study 1 =====
 
 %%Cost Factors
-1.InterestCharges = 20.00000
+1. Interest Charges = 20.00000
 
 &compare&

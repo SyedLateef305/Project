@@ -17,57 +17,219 @@ st.set_page_config(page_title="MiPower Case Editor", layout="wide")
 
 st.markdown("""
 <style>
-.block-container {padding-top: 1.5rem; padding-bottom: 3rem;}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@700;800&display=swap');
 
-/* Header banner */
+html, body, [class*="css"] {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.block-container {padding-top: 1.4rem; padding-bottom: 3rem; max-width: 1220px;}
+
+/* ---------- Base typography ---------- */
+h1, h2, h3 {
+    font-family: 'Manrope', 'Inter', sans-serif !important;
+    letter-spacing: -0.02em !important;
+    color: #1E1B4B !important;
+}
+p, span, label, div { color: #1F2937; }
+.stCaption, [data-testid="stCaptionContainer"] {
+    font-size: 0.88rem !important;
+    color: #64748B !important;
+}
+strong, b { color: #1E1B4B; font-weight: 800; }
+code { color: #7C3AED; background: #F3F0FF; padding: 0.1rem 0.35rem; border-radius: 5px; font-weight: 600; }
+
+/* ---------- Header banner ---------- */
 .mce-header {
-    background: linear-gradient(90deg, #4F46E5 0%, #7C3AED 100%);
-    padding: 1.1rem 1.5rem;
-    border-radius: 12px;
-    margin-bottom: 1.2rem;
+    background: linear-gradient(120deg, #3730A3 0%, #6D28D9 50%, #A21CAF 100%);
+    padding: 1.8rem 2.1rem;
+    border-radius: 18px;
+    margin-bottom: 1.6rem;
+    box-shadow: 0 10px 32px rgba(76, 29, 149, 0.35), 0 2px 8px rgba(76, 29, 149, 0.25);
+    border: 1px solid rgba(255,255,255,0.12);
 }
 .mce-header h1 {
     color: white !important;
-    font-size: 1.6rem !important;
+    font-family: 'Manrope', sans-serif !important;
+    font-size: 2.1rem !important;
+    font-weight: 900 !important;
     margin: 0 !important;
+    letter-spacing: -0.03em;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.15);
 }
 .mce-header p {
-    color: #E0E7FF;
-    margin: 0.2rem 0 0 0;
-    font-size: 0.9rem;
+    color: #EDE9FE;
+    margin: 0.45rem 0 0 0;
+    font-size: 1.02rem;
+    font-weight: 500;
 }
 
-/* Tabs */
+/* ---------- Section labels (used throughout as bold colored headers) ---------- */
+.mce-section-label {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: #3730A3;
+    margin: 1.1rem 0 0.55rem 0;
+    padding-bottom: 0.35rem;
+    border-bottom: 3px solid #E0E7FF;
+    letter-spacing: -0.01em;
+}
+.mce-modify-label {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    color: #3730A3;
+    margin: 0.9rem 0 0.5rem 0;
+    font-size: 1.08rem;
+    letter-spacing: -0.01em;
+}
+
+/* ---------- Tabs ---------- */
 button[data-baseweb="tab"] {
-    font-weight: 600;
-    border-radius: 8px 8px 0 0 !important;
+    font-weight: 700;
+    font-size: 0.98rem;
+    border-radius: 10px 10px 0 0 !important;
+    padding: 0.6rem 1.3rem !important;
+    color: #64748B !important;
 }
 button[data-baseweb="tab"][aria-selected="true"] {
-    background-color: #EEF2FF !important;
-    color: #4F46E5 !important;
+    background: linear-gradient(180deg, #EEF2FF 0%, #E0E7FF 100%) !important;
+    color: #3730A3 !important;
+    font-weight: 800 !important;
+    box-shadow: inset 0 -3px 0 #4338CA;
+}
+div[data-baseweb="tab-list"] {
+    gap: 6px;
+    border-bottom: 3px solid #E2E8F0;
 }
 
-/* Cards */
+/* ---------- Cards / containers ---------- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border-radius: 14px !important;
+    border: 1px solid #E2E8F0 !important;
+    box-shadow: 0 2px 10px rgba(30, 27, 75, 0.06);
+    padding: 0.2rem 0.2rem;
 }
 
-/* Sidebar */
+/* ---------- Metrics ---------- */
+div[data-testid="stMetric"] {
+    background: linear-gradient(160deg, #FAFAFF 0%, #F3F0FF 100%);
+    border: 1.5px solid #DDD6FE;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 2px 8px rgba(76, 29, 149, 0.06);
+}
+div[data-testid="stMetricValue"] {
+    color: #4338CA;
+    font-weight: 900 !important;
+    font-size: 1.7rem !important;
+    font-family: 'Manrope', sans-serif;
+}
+div[data-testid="stMetricLabel"] {
+    font-weight: 700 !important;
+    color: #6D28D9 !important;
+    font-size: 0.82rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* ---------- Buttons ---------- */
+.stButton > button, .stDownloadButton > button {
+    border-radius: 9px;
+    font-weight: 700;
+    border: 1.5px solid #E2E8F0;
+    transition: all 0.15s ease;
+}
+.stButton > button:hover, .stDownloadButton > button:hover {
+    border-color: #A5B4FC;
+    box-shadow: 0 2px 8px rgba(76, 29, 149, 0.15);
+}
+.stButton > button[kind="primary"], .stDownloadButton > button[kind="primary"] {
+    background: linear-gradient(120deg, #4338CA, #9333EA);
+    border: none;
+    font-weight: 800;
+    box-shadow: 0 4px 14px rgba(76, 29, 149, 0.3);
+}
+.stButton > button[kind="primary"]:hover, .stDownloadButton > button[kind="primary"]:hover {
+    box-shadow: 0 6px 20px rgba(76, 29, 149, 0.4);
+    transform: translateY(-1px);
+}
+
+/* ---------- Inputs / selects ---------- */
+.stTextInput input, .stSelectbox div[data-baseweb="select"] > div, .stTextArea textarea {
+    border-radius: 9px !important;
+    border: 1.5px solid #E2E8F0 !important;
+    font-weight: 500;
+}
+.stTextInput input:focus, .stTextArea textarea:focus {
+    border-color: #818CF8 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+}
+
+/* ---------- Sidebar ---------- */
 section[data-testid="stSidebar"] {
-    background-color: #F8FAFC;
+    background: linear-gradient(180deg, #F8FAFC 0%, #F1F0FF 100%);
+    border-right: 1px solid #E2E8F0;
 }
 section[data-testid="stSidebar"] h1,
 section[data-testid="stSidebar"] h2 {
-    color: #4F46E5;
-    font-size: 1.15rem !important;
+    color: #3730A3 !important;
+    font-family: 'Manrope', sans-serif !important;
+    font-size: 1.2rem !important;
+    font-weight: 800 !important;
 }
 
-/* modify.txt code block */
-.mce-modify-label {
-    font-weight: 700;
-    color: #4F46E5;
-    margin-bottom: 0.3rem;
+/* ---------- Combined export header ---------- */
+.mce-export-header {
+    background: linear-gradient(120deg, #047857 0%, #0D9488 55%, #0891B2 100%);
+    color: white;
+    padding: 1.15rem 1.6rem;
+    border-radius: 16px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 900;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    box-shadow: 0 8px 26px rgba(6, 95, 70, 0.3);
+    border: 1px solid rgba(255,255,255,0.12);
+}
+
+/* ---------- Footer ---------- */
+.mce-footer {
+    text-align: center;
+    color: #94A3B8;
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-top: 2rem;
+    padding-top: 1.2rem;
+    border-top: 2px solid #E2E8F0;
+}
+
+/* ---------- Code blocks / tables ---------- */
+.stCodeBlock, pre {
+    border-radius: 12px !important;
+    border: 1px solid #E2E8F0 !important;
+}
+div[data-testid="stDataFrame"], div[data-testid="stDataEditor"] {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1.5px solid #E2E8F0;
+}
+
+/* ---------- Dividers ---------- */
+hr {
+    border-top: 2px solid #E2E8F0 !important;
+    margin: 1.6rem 0 !important;
+}
+
+/* ---------- Expanders ---------- */
+details[data-testid="stExpander"] {
+    border-radius: 12px !important;
+    border: 1.5px solid #E2E8F0 !important;
+}
+summary {
+    font-weight: 700 !important;
+    color: #3730A3 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -182,40 +344,88 @@ def parse_two_row_table_section(lines, section_name, columns_row1, columns_row2)
     return pd.DataFrame(rows, columns=columns_row1 + columns_row2)
 
 
-def parse_keyvalue_section(lines, section_name, labels):
+def parse_keyvalue_section(lines, section_name, labels, zero_fill=False):
     """
     Returns fields in TRUE global order (position 1..N across every data
     line in the section). This is the index _apply_subsection_mod() in
     VIA_main.py actually uses, regardless of how the file's own comments
     re-number things locally - so writing modify.txt with this index is
     always correct.
+
+    zero_fill: when a section exists only as comment lines with no actual
+    data row in this case file (e.g. an unused "Source Details" block),
+    display every field as "0" instead of blank, so the table still reads
+    cleanly and consistently with sections that do carry real data.
     """
     loc = find_section(lines, section_name)
     if loc == -1:
+        if zero_fill:
+            return pd.DataFrame(
+                [{"field": f"{idx + 1}.{label}", "value": "0"} for idx, label in enumerate(labels)]
+            )
         return None
     # Skip past ANY mix of blank lines and '%' comment lines - a blank line
     # can appear in the middle of a multi-line comment block (e.g. Common
     # Control Options, System Specification), so we can't stop at the
     # first blank line the way a naive "while starts with %" loop would.
+    # However, if a '%' line is itself the header of a DIFFERENT known
+    # section (e.g. Source Details has no data rows at all, and the very
+    # next thing in the file is "%Sink Details"), we must stop there - not
+    # skip through it - or values would be misattributed to the wrong
+    # section entirely (Source Details would silently show Sink Details'
+    # numbers instead of "no data").
+    other_section_names = {
+        c["section"].strip().lower()
+        for c in TABLE_CONFIG.values()
+        if c["section"].strip().lower() != section_name.strip().lower()
+    } | {s.strip().lower() for s in RAW_SECTIONS if s.strip().lower() != section_name.strip().lower()}
     i = loc + 1
+    hit_boundary = False
     while i < len(lines):
         s = lines[i].strip()
-        if not s or s.startswith('%'):
+        if not s:
+            i += 1
+            continue
+        if s.startswith('%'):
+            if s.lstrip('%').strip().lower() in other_section_names:
+                hit_boundary = True
+                break
             i += 1
             continue
         break
+    if hit_boundary:
+        if zero_fill:
+            return pd.DataFrame(
+                [{"field": f"{idx + 1}.{label}", "value": "0"} for idx, label in enumerate(labels)]
+            )
+        return pd.DataFrame(
+            [{"field": f"{idx + 1}.{label}", "value": ""} for idx, label in enumerate(labels)]
+        )
+    # Collect numeric values across every data line in the section. Some
+    # sections (Common Control Options is the clearest example) split their
+    # fields across TWO data lines with a comment block sitting in between
+    # (base 15 fields, then a "%1.Q-Checking Limit..." comment, then 8 more
+    # fields) - so we must skip PAST an embedded comment line and keep
+    # collecting, only stopping once we reach a real section boundary (the
+    # start of a different section) or run out of lines.
     values = []
     j = i
     while j < len(lines):
         s = lines[j].strip()
         if s.startswith('%'):
-            break
+            if s.lstrip('%').strip().lower() in other_section_names:
+                break
+            j += 1
+            continue
         if s:
             values.extend(extract_numeric_tokens(s))
         j += 1
     out = []
     for idx, label in enumerate(labels):
-        val = values[idx] if idx < len(values) else ""
+        if idx < len(values):
+            val = values[idx]
+        else:
+            val = "0" if zero_fill else ""
         out.append({"field": f"{idx + 1}.{label}", "value": val})
     return pd.DataFrame(out)
 
@@ -274,6 +484,23 @@ TABLE_CONFIG = {
             "NoOfSolarPVPlants", "TotalSynchronousMotor",
         ],
         "editable": [],
+        # The file's own comment wording doesn't always match our clean label
+        # names 1:1 (missing periods, extra spaces, different casing) - these
+        # are the exact substrings VIA_main.py would need to locate each
+        # field if it's ever made editable. Kept here even though nothing in
+        # this table is editable yet, so turning one on later is a 1-line
+        # change instead of a silent modify.txt bug.
+        "field_overrides": {
+            "TotalSFD": "21 TotalSFD",
+            "FeedCurrent": "22: FeedCurrent",
+            "TotalTCSC": "23. Total TCSC",
+            "TotalSPS": "24. Total SPS",
+            "TotalUPFC": "25. Total UPFC",
+            "NoOfWTCurves": "27.No.ofWTCurves",
+            "NoOfDetailedCurves": "28.No.ofDetailedCurves",
+            "NoOfSolarPVPlants": "29.No.ofSolarPVPlants",
+            "TotalSynchronousMotor": "30.Total SynchronousMotor",
+        },
     },
     "Common Control Options": {
         "kind": "keyvalue",
@@ -289,13 +516,33 @@ TABLE_CONFIG = {
         "editable": [
             "PrintOption", "SlackBusID", "BaseMVA", "NominalFrequency",
         ],
+        # Exact file wording for fields where it differs from our clean label
+        # (a missing space breaks VIA_main.py's literal substring search -
+        # this is what caused "Subsection '3.PrintOption' not found" and
+        # "'6.BaseMVA' not found" warnings when applying a real modify.txt).
+        "field_overrides": {
+            "NumberOfZones": "2.Number Of Zones",
+            "PrintOption": "3.Print Option",
+            "PlotOption": "4.Plot Option",
+            "FrequencyDependentLFA": "5.Frequency Dependent LFA",
+            "BaseMVA": "6.Base MVA",
+            "NominalFrequency": "7.Nominal Frequency",
+            "FrequencyDeviation": "8.Frequency Deviation",
+            "FlowTypeOption": "9.Flow Type Option",
+            "SlackBusID": "10.Slack Bus ID",
+            "TapChangeOption": "11.Tap Change Option",
+            "NoOfAreas": "13.No of Areas",
+            "NoOfSubsystems": "14.No of Subsystems",
+            "ScalingFactorType": "15.Scaling factor type",
+        },
         # NOTE: QCheckingLimit, PTolerance, QTolerance, MaximumIterations,
         # LoadModelVoltage, CBResistance, CBReactance, TransformerRXratio
-        # sit past a comment block that breaks VIA_main.py's own
-        # extract_all_numeric_values() (it stops at the first '%' line).
-        # They're excluded from "editable" until that's fixed in the
-        # engine itself, so this UI never generates a modify.txt entry
-        # that would silently fail to apply.
+        # sit past a comment block, AND the file re-numbers them 1-8 locally
+        # (not 16-23), so even a text-matching override can't fix them - the
+        # anchor VIA_main.py finds would still compute the wrong target index
+        # from that local "1." prefix. They stay excluded from "editable"
+        # until that's fixed in the engine itself, so this UI never generates
+        # a modify.txt entry that would silently apply to the wrong field.
     },
     "Cost Factors": {
         "kind": "keyvalue",
@@ -305,6 +552,14 @@ TABLE_CONFIG = {
             "EnergyCharges", "LossLoadFactor", "CostPerMvar",
         ],
         "editable": ["InterestCharges", "OperationalCharges", "CostPerMvar"],
+        "field_overrides": {
+            "InterestCharges": "1. Interest Charges",
+            "OperationalCharges": "2. Operational Charges",
+            "LifeOfEquipment": "3. Life of Equipment",
+            "EnergyCharges": "4. Energy Charges",
+            "LossLoadFactor": "5. Loss Load Factor",
+            "CostPerMvar": "6. Cost per Mvar",
+        },
     },
     "Zone Multiplication Factors": {
         "kind": "table",
@@ -364,6 +619,53 @@ TABLE_CONFIG = {
         "kind": "simple",
         "section": "Slack Bus Angle",
         "editable": True,
+    },
+    "Source Details": {
+        "kind": "keyvalue",
+        "section": "Source Details",
+        "labels": [
+            "Area/Bus Number/Zone", "Option(1-Generation Increment)",
+            "Incdec Loc(1-All Buses,2-selected Buses)",
+            "Load Increment percent(1-equal/2-Unequal)",
+            "%Contribution total change", "LoadBus/GenBusCount",
+            "BusNumber", "Increment",
+        ],
+        # This case file has no actual Source Details data rows - only the
+        # column/format comments are present in the .dat0 - so every field
+        # is shown blank rather than a fabricated value. Read-only: with no
+        # data row for VIA_main.py's _apply_subsection_mod() to locate,
+        # any "edit" here couldn't be written back to the file, so this
+        # table is display-only until a case with real source data exists.
+        "editable": [],
+        "zero_fill": False,
+    },
+    "Sink Details": {
+        "kind": "keyvalue",
+        "section": "Sink Details",
+        "labels": [
+            "Area/Bus Number/Zone", "Option(2-Load Increment)",
+            "Load Increment percent(1-equal/2-Unequal)",
+            "Incdec Loc(1-All Buses,2-selected Buses)",
+            "Type (0 Collapse point,1 User specified)",
+            "LoadType(0 ConstP, 1 ConstQ, 2 UserDefPQ, 3 UserDefPF, 4 Const PF)",
+            "LoadBus/GenBusCount", "BusNumber", "Increment",
+            "Min Real Power in MW", "Max Real Power in MW",
+            "Real Power Step in MW", "Min Reactive power in MVAR",
+            "Max Reactive Power in MVAR", "Reactive Power Step in MVAR",
+        ],
+        # Only the first 6 fields sit on the file's own "1.Area/Bus Number...
+        # 6.LoadType..." numbered comment line, so only those resolve to a
+        # real position for VIA_main.py's _apply_subsection_mod(). The rest
+        # (BusNumber/Increment/MW/MVAR fields) live under their own
+        # restart-numbered sub-headers and are shown read-only below, same
+        # pattern already used for Common Control Options.
+        "editable": [
+            "Area/Bus Number/Zone", "Option(2-Load Increment)",
+            "Load Increment percent(1-equal/2-Unequal)",
+            "Incdec Loc(1-All Buses,2-selected Buses)",
+            "Type (0 Collapse point,1 User specified)",
+            "LoadType(0 ConstP, 1 ConstQ, 2 UserDefPQ, 3 UserDefPF, 4 Const PF)",
+        ],
     },
 }
 
@@ -430,6 +732,26 @@ def remove_mod(case_key, mod_key):
 def build_modify_txt(case_key):
     mods = st.session_state.cases[case_key]["mods"]
     body = "\n\n".join(mods.values())
+    return (body + "\n\n&compare&\n") if body else "&compare&\n"
+
+
+def build_combined_modify_txt():
+    """
+    Single modify.txt covering every case study, in one file. Each case's
+    edits sit under a plain '%'-comment banner (harmless to VIA_main.py's
+    parser - it just becomes an inert section name that consumes no data
+    line), so the file stays readable and organized per case. Exactly ONE
+    '&compare&' terminator sits at the very end, since VIA_main.py stops
+    reading the moment it hits the first one.
+    """
+    sections = []
+    for case_name, case in st.session_state.cases.items():
+        mods = case["mods"]
+        if not mods:
+            continue
+        banner = f"%===== {case_name} ====="
+        sections.append(banner + "\n\n" + "\n\n".join(mods.values()))
+    body = "\n\n".join(sections)
     return (body + "\n\n&compare&\n") if body else "&compare&\n"
 
 
@@ -518,7 +840,7 @@ with st.sidebar:
     st.markdown(
         f'''<div style="display:flex;gap:8px;">
         <div style="flex:1;background:#EEF2FF;border-radius:10px;padding:10px;text-align:center;">
-            <div style="font-size:1.4rem;font-weight:700;color:#4F46E5;">{len(st.session_state.cases)}</div>
+            <div style="font-size:1.4rem;font-weight:700;color:#4338CA;">{len(st.session_state.cases)}</div>
             <div style="font-size:0.75rem;color:#64748B;">Case studies</div>
         </div>
         <div style="flex:1;background:#ECFDF5;border-radius:10px;padding:10px;text-align:center;">
@@ -710,7 +1032,7 @@ for tab, case_name in zip(tabs, case_names):
                     st.success("modify.txt updated below.", icon="✅")
 
         elif cfg is not None and cfg["kind"] == "keyvalue":
-            df = parse_keyvalue_section(lines, cfg["section"], cfg["labels"])
+            df = parse_keyvalue_section(lines, cfg["section"], cfg["labels"], zero_fill=cfg.get("zero_fill", False))
             if df is None:
                 st.caption(f"Section '{cfg['section']}' not found in this file.")
             else:
@@ -734,11 +1056,20 @@ for tab, case_name in zip(tabs, case_names):
                     st.dataframe(locked_df, hide_index=True, use_container_width=True)
 
                 if not edited.equals(edit_df):
+                    overrides = cfg.get("field_overrides", {})
                     for ridx in range(len(edit_df)):
                         old_v, new_v = edit_df.at[ridx, "value"], edited.at[ridx, "value"]
                         field = edit_df.at[ridx, "field"]
                         if str(old_v) != str(new_v):
-                            block = f"%%{cfg['section']}\n{field} = {new_v}"
+                            # The text written into modify.txt must be a literal
+                            # substring of the file's own comment line, or
+                            # VIA_main.py's _apply_subsection_mod() can't find it
+                            # (e.g. our clean "3.PrintOption" label vs. the file's
+                            # actual "3.Print Option" wording). field_overrides
+                            # holds the exact wording per field where it differs.
+                            label_only = field.split('.', 1)[1] if '.' in field else field
+                            anchor = overrides.get(label_only, field)
+                            block = f"%%{cfg['section']}\n{anchor} = {new_v}"
                             key = mod_key_for_keyvalue(cfg["section"], field)
                             append_mod(case_name, key, block)
                     st.success("modify.txt updated below.", icon="✅")
@@ -758,9 +1089,16 @@ for tab, case_name in zip(tabs, case_names):
 
         else:
             text = parse_raw_section(lines, plain_name)
-            st.caption("This table isn't wired up for editing yet - shown read-only. "
-                       "Add it to TABLE_CONFIG using the same pattern as Bus Data.")
-            st.code(text or "(section not found)", language="text")
+            section_exists = find_section(lines, plain_name) != -1
+            if section_exists and not text:
+                st.caption(
+                    "This case file has no data in this section — it only "
+                    "defines the column layout, with no rows recorded."
+                )
+            else:
+                st.caption("This table isn't wired up for editing yet - shown read-only. "
+                           "Add it to TABLE_CONFIG using the same pattern as Bus Data.")
+                st.code(text or "(section not found)", language="text")
 
         st.divider()
         st.markdown('<div class="mce-modify-label">📝 Pending modifications</div>', unsafe_allow_html=True)
@@ -780,24 +1118,61 @@ for tab, case_name in zip(tabs, case_names):
                 st.session_state.cases[case_name]["mods"] = {}
                 st.rerun()
 
-        st.markdown('<div class="mce-modify-label">📄 modify.txt preview</div>', unsafe_allow_html=True)
+        st.markdown('<div class="mce-modify-label">📄 modify.txt preview for this case</div>', unsafe_allow_html=True)
         mod_text = build_modify_txt(case_name)
         st.code(mod_text, language="text")
+        st.caption(
+            "This preview is per case study. Scroll down to **📦 Combined Export** "
+            "to download or save every case study's edits together in a single modify.txt file."
+        )
 
-        c1, c2 = st.columns(2)
-        with c1:
-            st.download_button(
-                "Download modify.txt", mod_text, file_name="modify.txt",
-                key=f"dl_{case_name}", use_container_width=True,
-            )
-        with c2:
-            save_path = st.text_input(
-                "Save to local path", value="modify.txt", key=f"savepath_{case_name}"
-            )
-            if st.button("Save to disk", key=f"save_{case_name}", use_container_width=True):
-                try:
-                    with open(save_path, "w", newline="") as f:
-                        f.write(mod_text.replace("\n", "\r\n"))
-                    st.success(f"Saved to {save_path}")
-                except Exception as e:
-                    st.error(f"Could not save: {e}")
+st.divider()
+st.markdown(
+    '<div class="mce-export-header">📦 Combined Export — all case studies, one file</div>',
+    unsafe_allow_html=True,
+)
+
+combined_mods = sum(len(c["mods"]) for c in st.session_state.cases.values())
+non_empty_cases = [name for name, c in st.session_state.cases.items() if c["mods"]]
+
+if combined_mods == 0:
+    st.info("No edits yet in any case study. Once you edit a table above, its changes will "
+            "appear here bundled into one modify.txt.")
+else:
+    st.caption(
+        f"Bundling **{combined_mods}** edit(s) from **{len(non_empty_cases)}** case "
+        f"stud{'y' if len(non_empty_cases) == 1 else 'ies'} "
+        f"({', '.join(non_empty_cases)}) into a single file, each under its own "
+        "labeled section, ending in one `&compare&` marker."
+    )
+
+combined_text = build_combined_modify_txt()
+with st.expander("📄 Preview combined modify.txt", expanded=(combined_mods > 0)):
+    st.code(combined_text, language="text")
+
+ce1, ce2 = st.columns(2)
+with ce1:
+    st.download_button(
+        "⬇️ Download combined modify.txt", combined_text, file_name="modify.txt",
+        key="dl_combined", use_container_width=True, type="primary",
+        disabled=(combined_mods == 0),
+    )
+with ce2:
+    combined_save_path = st.text_input(
+        "Save to local path", value="modify.txt", key="savepath_combined",
+        label_visibility="collapsed", placeholder="Save to local path (e.g. modify.txt)",
+    )
+    if st.button("💾 Save to disk", key="save_combined", use_container_width=True,
+                 disabled=(combined_mods == 0)):
+        try:
+            with open(combined_save_path, "w", newline="") as f:
+                f.write(combined_text.replace("\n", "\r\n"))
+            st.success(f"Saved combined modify.txt for all case studies to {combined_save_path}")
+        except Exception as e:
+            st.error(f"Could not save: {e}")
+
+st.markdown(
+    '<div class="mce-footer">MiPower Case Editor · built for VIA_main.py · '
+    'edits are only written to disk when you click Save</div>',
+    unsafe_allow_html=True,
+)
