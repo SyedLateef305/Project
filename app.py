@@ -17,181 +17,332 @@ st.set_page_config(page_title="MiPower Case Editor", layout="wide")
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&family=Bebas+Neue&display=swap');
+
+:root {
+    --mce-indigo: #4338CA;
+    --mce-violet: #7C3AED;
+    --mce-magenta: #C026D3;
+    --mce-rose: #E11D48;
+    --mce-amber: #D97706;
+    --mce-gold: #F59E0B;
+    --mce-cyan: #0891B2;
+    --mce-electric: #06B6D4;
+    --mce-emerald: #059669;
+    --mce-navy: #0B1220;
+    --mce-navy-2: #141B33;
+}
 
 html, body, [class*="css"] {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-.block-container {padding-top: 1.4rem; padding-bottom: 3rem; max-width: 1220px;}
+.block-container {padding-top: 1.2rem; padding-bottom: 3rem; max-width: 1260px;}
+
+/* ---------- Ambient backdrop: faint circuit-board grid ---------- */
+.stApp {
+    background:
+        radial-gradient(circle at 8% 0%, rgba(124, 58, 237, 0.07) 0%, transparent 45%),
+        radial-gradient(circle at 100% 12%, rgba(6, 182, 212, 0.07) 0%, transparent 40%),
+        radial-gradient(circle at 50% 100%, rgba(217, 119, 6, 0.05) 0%, transparent 45%),
+        linear-gradient(90deg, rgba(67,56,202,0.045) 1px, transparent 1px) 0 0 / 42px 42px,
+        linear-gradient(180deg, rgba(67,56,202,0.045) 1px, transparent 1px) 0 0 / 42px 42px,
+        #F8F8FC;
+}
 
 /* ---------- Base typography ---------- */
 h1, h2, h3 {
-    font-family: 'Manrope', 'Inter', sans-serif !important;
+    font-family: 'Space Grotesk', 'Inter', sans-serif !important;
     letter-spacing: -0.02em !important;
     color: #1E1B4B !important;
+    font-weight: 700 !important;
 }
 p, span, label, div { color: #1F2937; }
 .stCaption, [data-testid="stCaptionContainer"] {
     font-size: 0.88rem !important;
     color: #64748B !important;
+    font-style: italic;
 }
 strong, b { color: #1E1B4B; font-weight: 800; }
-code { color: #7C3AED; background: #F3F0FF; padding: 0.1rem 0.35rem; border-radius: 5px; font-weight: 600; }
+code {
+    color: var(--mce-magenta);
+    background: #FDF4FF;
+    padding: 0.12rem 0.4rem;
+    border-radius: 5px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace !important;
+}
 
-/* ---------- Header banner ---------- */
+/* ---------- Header banner (animated 4-color sweep) ---------- */
 .mce-header {
-    background: linear-gradient(120deg, #3730A3 0%, #6D28D9 50%, #A21CAF 100%);
-    padding: 1.8rem 2.1rem;
-    border-radius: 18px;
-    margin-bottom: 1.6rem;
-    box-shadow: 0 10px 32px rgba(76, 29, 149, 0.35), 0 2px 8px rgba(76, 29, 149, 0.25);
-    border: 1px solid rgba(255,255,255,0.12);
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(100deg, #1E1B4B 0%, #4338CA 26%, #A21CAF 55%, #C026D3 72%, #D97706 100%);
+    background-size: 300% 300%;
+    animation: mce-gradient-flow 12s ease infinite;
+    padding: 2rem 2.3rem;
+    border-radius: 20px;
+    margin-bottom: 1.7rem;
+    box-shadow: 0 14px 36px rgba(76, 29, 149, 0.38), 0 3px 10px rgba(76, 29, 149, 0.28);
+    border: 1px solid rgba(255,255,255,0.15);
+}
+.mce-header::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px),
+                       linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+}
+@keyframes mce-gradient-flow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.mce-header .mce-eyebrow {
+    position: relative;
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #FDE68A;
+    background: rgba(0,0,0,0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    margin-bottom: 0.6rem;
+    border: 1px solid rgba(253, 230, 138, 0.4);
 }
 .mce-header h1 {
+    position: relative;
     color: white !important;
-    font-family: 'Manrope', sans-serif !important;
-    font-size: 2.1rem !important;
-    font-weight: 900 !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 2.3rem !important;
+    font-weight: 800 !important;
     margin: 0 !important;
     letter-spacing: -0.03em;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    text-shadow: 0 2px 14px rgba(0,0,0,0.25);
 }
 .mce-header p {
-    color: #EDE9FE;
-    margin: 0.45rem 0 0 0;
-    font-size: 1.02rem;
+    position: relative;
+    color: #F3E8FF;
+    margin: 0.5rem 0 0 0;
+    font-size: 1.03rem;
     font-weight: 500;
 }
 
-/* ---------- Section labels (used throughout as bold colored headers) ---------- */
+/* ---------- Section labels (bold colored dashboard headers) ---------- */
 .mce-section-label {
-    font-family: 'Manrope', sans-serif;
-    font-weight: 800;
-    font-size: 1.15rem;
-    color: #3730A3;
-    margin: 1.1rem 0 0.55rem 0;
-    padding-bottom: 0.35rem;
-    border-bottom: 3px solid #E0E7FF;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #FFFFFF;
+    margin: 1.2rem 0 0.7rem 0;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
     letter-spacing: -0.01em;
+    background: linear-gradient(100deg, var(--mce-indigo), var(--mce-violet));
+    box-shadow: 0 4px 14px rgba(76, 29, 149, 0.25);
+    display: block;
 }
 .mce-modify-label {
-    font-family: 'Manrope', sans-serif;
-    font-weight: 800;
-    color: #3730A3;
-    margin: 0.9rem 0 0.5rem 0;
-    font-size: 1.08rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 1rem 0 0.55rem 0;
+    font-size: 1.02rem;
     letter-spacing: -0.01em;
+    background: linear-gradient(100deg, var(--mce-cyan), var(--mce-emerald));
+    padding: 0.45rem 0.95rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(8, 145, 178, 0.22);
+    display: block;
 }
 
-/* ---------- Tabs ---------- */
+/* ---------- Badges (editable / read-only / not wired) ---------- */
+.mce-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    padding: 0.28rem 0.85rem;
+    border-radius: 999px;
+    display: inline-block;
+    border: 1.5px solid transparent;
+}
+.mce-badge-editable {
+    background: linear-gradient(100deg, #D1FAE5, #A7F3D0);
+    color: #065F46;
+    border-color: #6EE7B7;
+    box-shadow: 0 2px 8px rgba(5, 150, 105, 0.18);
+}
+.mce-badge-readonly {
+    background: linear-gradient(100deg, #E2E8F0, #CBD5E1);
+    color: #334155;
+    border-color: #94A3B8;
+}
+.mce-badge-unwired {
+    background: linear-gradient(100deg, #FEF3C7, #FDE68A);
+    color: #92400E;
+    border-color: #FBBF24;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.2);
+}
+
+/* ---------- Tabs (breaker-switch style) ---------- */
 button[data-baseweb="tab"] {
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 0.98rem;
     border-radius: 10px 10px 0 0 !important;
-    padding: 0.6rem 1.3rem !important;
-    color: #64748B !important;
+    padding: 0.65rem 1.4rem !important;
+    color: #7C7BA0 !important;
+    background: #F1F0F9 !important;
+    margin-right: 2px;
 }
 button[data-baseweb="tab"][aria-selected="true"] {
     background: linear-gradient(180deg, #EEF2FF 0%, #E0E7FF 100%) !important;
-    color: #3730A3 !important;
+    color: var(--mce-indigo) !important;
     font-weight: 800 !important;
-    box-shadow: inset 0 -3px 0 #4338CA;
+    box-shadow: inset 0 -4px 0 var(--mce-electric);
 }
 div[data-baseweb="tab-list"] {
-    gap: 6px;
+    gap: 4px;
     border-bottom: 3px solid #E2E8F0;
 }
 
 /* ---------- Cards / containers ---------- */
 div[data-testid="stVerticalBlockBorderWrapper"] {
-    border-radius: 14px !important;
-    border: 1px solid #E2E8F0 !important;
-    box-shadow: 0 2px 10px rgba(30, 27, 75, 0.06);
-    padding: 0.2rem 0.2rem;
+    border-radius: 16px !important;
+    border: 1px solid #E4E1F5 !important;
+    box-shadow: 0 3px 14px rgba(30, 27, 75, 0.07);
+    padding: 0.25rem 0.25rem;
+    background: #FFFFFF;
 }
 
-/* ---------- Metrics ---------- */
+/* ---------- Metrics (gauge-style, alternating accent) ---------- */
 div[data-testid="stMetric"] {
     background: linear-gradient(160deg, #FAFAFF 0%, #F3F0FF 100%);
     border: 1.5px solid #DDD6FE;
-    border-radius: 12px;
-    padding: 0.85rem 1rem;
-    box-shadow: 0 2px 8px rgba(76, 29, 149, 0.06);
+    border-radius: 14px;
+    padding: 0.9rem 1.05rem;
+    box-shadow: 0 3px 10px rgba(76, 29, 149, 0.08);
+    border-top: 4px solid var(--mce-violet);
+}
+div[data-testid="column"]:nth-of-type(2) div[data-testid="stMetric"] {
+    border-top-color: var(--mce-electric);
+    background: linear-gradient(160deg, #F0FDFF 0%, #E0F7FA 100%);
+}
+div[data-testid="column"]:nth-of-type(3) div[data-testid="stMetric"] {
+    border-top-color: var(--mce-gold);
+    background: linear-gradient(160deg, #FFFBEB 0%, #FEF3C7 100%);
 }
 div[data-testid="stMetricValue"] {
-    color: #4338CA;
-    font-weight: 900 !important;
-    font-size: 1.7rem !important;
-    font-family: 'Manrope', sans-serif;
+    color: var(--mce-indigo);
+    font-weight: 800 !important;
+    font-size: 1.75rem !important;
+    font-family: 'Space Grotesk', sans-serif;
 }
 div[data-testid="stMetricLabel"] {
     font-weight: 700 !important;
     color: #6D28D9 !important;
-    font-size: 0.82rem !important;
+    font-size: 0.78rem !important;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
+    font-family: 'JetBrains Mono', monospace !important;
 }
 
 /* ---------- Buttons ---------- */
 .stButton > button, .stDownloadButton > button {
-    border-radius: 9px;
+    border-radius: 10px;
     font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
     border: 1.5px solid #E2E8F0;
     transition: all 0.15s ease;
 }
 .stButton > button:hover, .stDownloadButton > button:hover {
     border-color: #A5B4FC;
-    box-shadow: 0 2px 8px rgba(76, 29, 149, 0.15);
+    box-shadow: 0 3px 10px rgba(76, 29, 149, 0.18);
+    transform: translateY(-1px);
 }
 .stButton > button[kind="primary"], .stDownloadButton > button[kind="primary"] {
-    background: linear-gradient(120deg, #4338CA, #9333EA);
+    background: linear-gradient(110deg, #4338CA, #C026D3 60%, #D97706 130%);
     border: none;
     font-weight: 800;
-    box-shadow: 0 4px 14px rgba(76, 29, 149, 0.3);
+    color: white !important;
+    box-shadow: 0 5px 16px rgba(76, 29, 149, 0.32);
 }
 .stButton > button[kind="primary"]:hover, .stDownloadButton > button[kind="primary"]:hover {
-    box-shadow: 0 6px 20px rgba(76, 29, 149, 0.4);
-    transform: translateY(-1px);
+    box-shadow: 0 7px 22px rgba(76, 29, 149, 0.42);
+    transform: translateY(-2px);
 }
 
 /* ---------- Inputs / selects ---------- */
 .stTextInput input, .stSelectbox div[data-baseweb="select"] > div, .stTextArea textarea {
-    border-radius: 9px !important;
+    border-radius: 10px !important;
     border: 1.5px solid #E2E8F0 !important;
     font-weight: 500;
 }
 .stTextInput input:focus, .stTextArea textarea:focus {
-    border-color: #818CF8 !important;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+    border-color: var(--mce-electric) !important;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.18) !important;
 }
 
-/* ---------- Sidebar ---------- */
+/* ---------- Sidebar: dark control-panel theme ---------- */
 section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #F8FAFC 0%, #F1F0FF 100%);
-    border-right: 1px solid #E2E8F0;
+    background: linear-gradient(180deg, var(--mce-navy) 0%, var(--mce-navy-2) 100%);
+    border-right: 1px solid rgba(255,255,255,0.06);
 }
+section[data-testid="stSidebar"] * { color: #E2E8F0; }
 section[data-testid="stSidebar"] h1,
-section[data-testid="stSidebar"] h2 {
-    color: #3730A3 !important;
-    font-family: 'Manrope', sans-serif !important;
-    font-size: 1.2rem !important;
-    font-weight: 800 !important;
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+    color: #FBBF24 !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em;
 }
+section[data-testid="stSidebar"] .stCaption,
+section[data-testid="stSidebar"] [data-testid="stCaptionContainer"] {
+    color: #94A3B8 !important;
+}
+section[data-testid="stSidebar"] .stTextInput input,
+section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] > div {
+    background: #1E293B !important;
+    color: #F1F5F9 !important;
+    border: 1.5px solid #334155 !important;
+}
+section[data-testid="stSidebar"] hr { border-top: 1px solid rgba(255,255,255,0.12) !important; }
+section[data-testid="stSidebar"] .stButton > button {
+    background: #1E293B;
+    color: #67E8F9 !important;
+    border: 1.5px solid #334155;
+}
+section[data-testid="stSidebar"] .stButton > button:hover {
+    border-color: #67E8F9;
+    box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.15);
+}
+section[data-testid="stSidebar"] details[data-testid="stExpander"] {
+    background: #141B33;
+    border: 1.5px solid #334155 !important;
+}
+section[data-testid="stSidebar"] summary { color: #FBBF24 !important; }
 
 /* ---------- Combined export header ---------- */
 .mce-export-header {
-    background: linear-gradient(120deg, #047857 0%, #0D9488 55%, #0891B2 100%);
+    background: linear-gradient(110deg, #047857 0%, #0D9488 45%, #0891B2 75%, #4338CA 120%);
     color: white;
-    padding: 1.15rem 1.6rem;
-    border-radius: 16px;
-    font-family: 'Manrope', sans-serif;
-    font-weight: 900;
-    font-size: 1.4rem;
+    padding: 1.2rem 1.7rem;
+    border-radius: 18px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 1.45rem;
     letter-spacing: -0.02em;
-    margin-bottom: 1rem;
-    box-shadow: 0 8px 26px rgba(6, 95, 70, 0.3);
-    border: 1px solid rgba(255,255,255,0.12);
+    margin-bottom: 1.1rem;
+    box-shadow: 0 9px 28px rgba(6, 95, 70, 0.32);
+    border: 1px solid rgba(255,255,255,0.14);
 }
 
 /* ---------- Footer ---------- */
@@ -200,36 +351,61 @@ section[data-testid="stSidebar"] h2 {
     color: #94A3B8;
     font-size: 0.82rem;
     font-weight: 500;
-    margin-top: 2rem;
-    padding-top: 1.2rem;
-    border-top: 2px solid #E2E8F0;
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 2.2rem;
+    padding-top: 1.3rem;
+    border-top: 2px dashed #CBD5E1;
 }
 
 /* ---------- Code blocks / tables ---------- */
 .stCodeBlock, pre {
-    border-radius: 12px !important;
+    border-radius: 13px !important;
     border: 1px solid #E2E8F0 !important;
 }
+.stCodeBlock code, pre code { font-family: 'JetBrains Mono', monospace !important; }
 div[data-testid="stDataFrame"], div[data-testid="stDataEditor"] {
-    border-radius: 12px;
+    border-radius: 13px;
     overflow: hidden;
-    border: 1.5px solid #E2E8F0;
+    border: 1.5px solid #DDD6FE;
+    box-shadow: 0 2px 10px rgba(76, 29, 149, 0.06);
 }
 
 /* ---------- Dividers ---------- */
 hr {
     border-top: 2px solid #E2E8F0 !important;
-    margin: 1.6rem 0 !important;
+    margin: 1.7rem 0 !important;
 }
 
 /* ---------- Expanders ---------- */
 details[data-testid="stExpander"] {
-    border-radius: 12px !important;
-    border: 1.5px solid #E2E8F0 !important;
+    border-radius: 13px !important;
+    border: 1.5px solid #DDD6FE !important;
 }
 summary {
     font-weight: 700 !important;
-    color: #3730A3 !important;
+    color: var(--mce-indigo) !important;
+    font-family: 'Space Grotesk', sans-serif !important;
+}
+
+/* ---------- Sidebar stat chips ---------- */
+.mce-chip {
+    flex: 1;
+    border-radius: 12px;
+    padding: 10px 6px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.mce-chip-value {
+    font-size: 1.45rem;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif;
+}
+.mce-chip-label {
+    font-size: 0.68rem;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: 'JetBrains Mono', monospace;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -794,8 +970,11 @@ if "cases" not in st.session_state:
     st.session_state.cases = {"Case Study 1": {"mods": {}}}
 
 st.markdown(
-    '<div class="mce-header"><h1>MiPower Case Editor</h1>'
-    '<p>Browse input.dat0 tables, edit permitted fields, and auto-build modify.txt</p></div>',
+    '<div class="mce-header">'
+    '<span class="mce-eyebrow">⚡ Voltage Instability Analysis · Case Editor</span>'
+    '<h1>MiPower Case Editor</h1>'
+    '<p>Browse input.dat0 tables, edit permitted fields, and auto-build modify.txt</p>'
+    '</div>',
     unsafe_allow_html=True,
 )
 
@@ -839,17 +1018,17 @@ with st.sidebar:
     total_tables = len({m[1] for c in st.session_state.cases.values() for m in c["mods"].keys()})
     st.markdown(
         f'''<div style="display:flex;gap:8px;">
-        <div style="flex:1;background:#EEF2FF;border-radius:10px;padding:10px;text-align:center;">
-            <div style="font-size:1.4rem;font-weight:700;color:#4338CA;">{len(st.session_state.cases)}</div>
-            <div style="font-size:0.75rem;color:#64748B;">Case studies</div>
+        <div class="mce-chip" style="background:rgba(124,58,237,0.16);border-color:rgba(167,139,250,0.35);">
+            <div class="mce-chip-value" style="color:#C4B5FD;">{len(st.session_state.cases)}</div>
+            <div class="mce-chip-label">Case studies</div>
         </div>
-        <div style="flex:1;background:#ECFDF5;border-radius:10px;padding:10px;text-align:center;">
-            <div style="font-size:1.4rem;font-weight:700;color:#059669;">{total_mods}</div>
-            <div style="font-size:0.75rem;color:#64748B;">Total edits</div>
+        <div class="mce-chip" style="background:rgba(6,182,212,0.16);border-color:rgba(103,232,249,0.35);">
+            <div class="mce-chip-value" style="color:#67E8F9;">{total_mods}</div>
+            <div class="mce-chip-label">Total edits</div>
         </div>
-        <div style="flex:1;background:#FEF3C7;border-radius:10px;padding:10px;text-align:center;">
-            <div style="font-size:1.4rem;font-weight:700;color:#B45309;">{total_tables}</div>
-            <div style="font-size:0.75rem;color:#64748B;">Tables touched</div>
+        <div class="mce-chip" style="background:rgba(217,119,6,0.16);border-color:rgba(251,191,36,0.35);">
+            <div class="mce-chip-value" style="color:#FBBF24;">{total_tables}</div>
+            <div class="mce-chip-label">Tables touched</div>
         </div>
         </div>''',
         unsafe_allow_html=True,

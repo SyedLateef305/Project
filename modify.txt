@@ -1,6 +1,14 @@
 %===== Case Study 1 =====
 
-%%Cost Factors
-1. Interest Charges = 20.00000
+%%Common Control Options
+3.Print Option = 4
+
+%%Common Control Options
+6.Base MVA = 200.000000
+
+%===== Case Study 2 =====
+
+%%%Transmission Line
+R = 3.20000e-002 -> FromBus=1 -> ToBus=2
 
 &compare&
